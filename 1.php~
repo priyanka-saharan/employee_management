@@ -1,0 +1,50 @@
+<?php
+session_start();
+?>
+<html>
+<head>
+</head>
+
+<body>
+<?php
+include('connect.php');
+?>
+
+<?php
+
+$target_dir = "gallery/";
+if ( isset( $_POST['upload']) ) { 
+	
+	$target_path = $target_dir.basename( $_FILES['image']['name']);   
+  
+	if (move_uploaded_file($_FILES['image']['tmp_name'], $target_path)) {  
+   		echo "File uploaded successfully";  
+		$_SESSION['user_image'] = $_FILES['image']['name'];
+
+		echo $_FILES['image']['name'];
+	} else{  
+   		echo "file not uploaded";  
+	}  
+
+}
+?>
+
+
+
+
+<form method="POST" action="" enctype="multipart/form-data">
+<?php
+if ( !empty($image) ) { ?>
+	<img src="<?php echo (isset($image) ? $target_dir.$image : '' ); ?>" width="150" height="160"> <br><br>
+<?php
+} else {
+	echo "no image";
+}
+?>
+<input type="file" name="image">
+
+&nbsp; &nbsp;<span><input type="submit" name="upload" value="upload"></span>
+&nbsp; &nbsp;<span><input type="submit" name="delete" value="Delete Image"></span><br><br>
+</form>
+</body>
+</html>

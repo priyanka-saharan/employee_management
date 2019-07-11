@@ -1,0 +1,131 @@
+<?php
+session_start();
+?>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+		<style>
+			.class1 {
+				background-color:lightblue;
+				text-align:center;
+				border:1px solid lightblue;
+			}
+		</style>
+	</head>
+	<body>
+	<?php
+	include('connect.php');
+	?>
+	<?php
+
+	if ( isset($_POST['submit']) ) {
+	$id = $_GET['id'];
+		if ( !empty($_POST['leave_type']) && !empty($_POST['fromdate']) && !empty($_POST['todate']) && !empty($_POST['leave_reason']) ) {
+			$leavetype = $_POST['leave_type'];
+			$fromdate = $_POST['fromdate'];
+			$todate = $_POST['todate'];
+			$leavereason = $_POST['leave_reason'];
+
+			$query = "INSERT INTO apply_leave (id, lea_type , from_date , to_date , reason) 
+				VALUES ('$id','$leavetype', '$fromdate', '$todate', '$leavereason')";
+			mysqli_query($conn , $query);
+?>			<h2 class="class1"> applied successfully </h2>  
+<?php			$start = strtotime($_POST['fromdate']);
+			$end = strtotime($_POST['todate']);
+			$diff = round ( abs( $end-$start)/(60*60*24) +1 );
+			//echo "no of days are " . $diff . "<br>";
+		
+			if ( isset($_POST['submit']) ) {
+				$id = $_GET['id'];
+				$query1 = "SELECT * FROM emp_info WHERE emp_id = $id";
+				$result = mysqli_query($conn , $query1);
+				$data = mysqli_fetch_array($result);
+				$cl_remaining = $data['remaining_CL'] ; 
+				$el_remaining = $data['remaining_EL'];
+				$_SESSION['user_CL'] = $cl_remaining ;
+				$_SESSION['user_EL'] = $el_remaining;
+				if ( isset($_POST['leave_type']) ) {
+					if ($_POST['leave_type'] == "CL" ) {
+						$cl_remaining = $cl_remaining - $diff;
+						if ($cl_remaining > 0) {
+							//echo "Remaining ". $cl_remaining . "<br>";
+							$sql1 = "UPDATE emp_info SET remaining_CL = $cl_remaining WHERE emp_id = $id"; 
+							mysqli_query($conn , $sql1);
+						} else {
+							echo "no CL remaining" ;
+						}
+					} else if ( $_POST['leave_type'] == "EL") {
+						$el_remaining = $el_remaining - $diff;
+						if ($el_remaining > 0) {
+							//echo $el_remaining;
+							$sql2 = "UPDATE emp_info SET remaining_EL = $el_remaining WHERE emp_id = $id"; 
+							mysqli_query($conn , $sql2);
+						} else {
+							echo "no EL remaining" ;
+						}
+					}
+				}
+			}
+		}
+	}
+	?>
+	<?php 
+	if ( isset($_POST['submit']) ) {
+		$id = $_GET['id'];
+		$query1 = "SELECT * FROM emp_info WHERE emp_id = $id";
+		$result = mysqli_query($conn , $query1);
+		$data = mysqli_fetch_array($result);
+		$x = $data['remaining_CL']; 
+		$y = $data['remaining_EL'];
+	} 
+	?>
+	<?php
+	//if ( isset($_POST['submit']) ) {
+	$id = $_GET['id'];
+	$query3 = "SELECT * FROM emp_info WHERE emp_id=" .$id;
+	$result1 = mysqli_query($conn , $query3);
+	$row = mysqli_fetch_array($result1);
+
+	?>	
+		<div class="container">
+			<h2>Apply for leave</h2>
+			<form method="POST" action="">
+				Select leave type : <select name="leave_type">
+							<option>select leave type</option>
+							<option value="CL">CL</option>
+							<option value="EL">EL</option>
+			   			</select><br><br>
+				From date : <input type="date" name="fromdate">   &nbsp;&nbsp;   To Date : <input type="date" name="todate"><br><br>
+				Reason : <textarea cols="20" rows="2" name="leave_reason"> </textarea><br><br>
+				<input type="submit" name="submit" value="Apply">
+				<button formaction="profile.php">Back to Profile </button>
+			</form>
+	
+			<h2><?php echo $_SESSION['user_name'] . "'s leave details"?> </h2>
+			<table border="1px solid black">
+				<thead>
+					<tr>
+						<th>leave type</th>
+						<th>total available</th>
+						<th>remaining</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr align="center">
+						<td>CL</td> 
+						<td>12</td>
+						<td><?php echo isset($x) ? $x : $row['remaining_CL'] ;?></td>			
+					</tr>
+					<tr align="center">
+						<td>EL</td>
+						<td>3</td>
+						<td><?php echo isset($y) ? $y : $row['remaining_EL'] ;?></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,36 @@
+<?php
+session_start();
+?>
+<html>
+	<head>
+
+
+	</head>
+	<body>
+
+	<?php
+
+		if (isset($_GET['submit']) ) {
+			if (isset($_GET['check_list']) ) { 
+				foreach ( $_GET['check_list'] as $selected) {
+					//echo $selected . "<br>";			
+					
+					
+
+				}
+				echo $str_emp = implode(' , ' , $_GET['check_list']) ;
+				$_SESSION['emp_str'] = $str_emp;
+				echo $_SESSION['emp_str'];
+			}		
+		}
+
+
+
+
+	?>
+	<form >
+<br><br><button type="submit" name="back" formaction="datatable.php?id=<?php echo $data['emp_id'];?>">Back</button>
+</form>
+	
+	</body>
+</html>

@@ -1,0 +1,44 @@
+<?php
+session_start();
+?>
+<html>
+<head>
+<style>
+.class1 {
+	background-color:lightblue;
+	text-align:center;
+	border:1px solid lightblue;
+}
+
+.class2 {
+	background-color:red;
+	text-align:center;
+	border:1px solid red;
+</style>
+</head>
+<body>
+<?php
+include('connect.php');
+?>
+<?php
+if ( isset($_GET['id']) ) {
+	$id = $_GET['id'];
+	$result = mysqli_query($conn , "SELECT * FROM emp_info WHERE emp_id = $id");
+	while ($row = mysqli_fetch_array($result) ) {
+		$status = $row['active_status'];
+	 	if ($status == 1) {
+			$status = 0;
+			$update = mysqli_query($conn , "UPDATE emp_info SET active_status = $status WHERE emp_id = $id");
+	?>		<h2 class="class1"> deactivated successfully </h2>
+<?php		} else {
+	?>		 <h2 class="class2">Already deactivated </h2>
+<?php		}
+
+	}
+}
+
+
+?>
+<p>Back to login page <a href="login.php">login </a></p> 
+</body>
+</html>

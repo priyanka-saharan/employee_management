@@ -1,0 +1,26 @@
+<?php
+session_start();
+include('connect.php');
+
+?>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+	</head>
+	<body>
+
+
+	<?php/*
+	if (isset($_POST['checkBoxArray']) ) {
+		$_SESSION['check_array'] = $_POST['checkBoxArray'];
+	}	
+*/
+	?>
+	</body>
+</html>

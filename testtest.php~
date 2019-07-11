@@ -1,0 +1,14 @@
+
+<html>
+<head>
+</head>
+<body>
+<script>
+   var res = "success";
+</script>
+<?php
+  $array = "<script>document.writeln(res);</script>";
+echo $array;
+?>
+<body>
+</html>
